@@ -5,6 +5,8 @@ import { AfterPair, CompareStage, EvidenceToday, FullScroll, LinkedInDemo, LIVE_
 
 const EASE = [0.22, 1, 0.36, 1] as const
 const PROPOSAL = '/proposal/'
+/** Links to the live proposal are held back until it is sent to the client. Flip to true to show them. */
+const SHOW_PROPOSAL_LINKS = false
 
 /** `code`, **bold** and *em* inside content strings. */
 export function rich(s: string): ReactNode {
@@ -51,7 +53,7 @@ export default function App() {
               </li>
             ))}
           </ol>
-          <a className="index__cta" href={PROPOSAL}>Open the proposed page <ArrowUpRight /></a>
+          {SHOW_PROPOSAL_LINKS && <a className="index__cta" href={PROPOSAL}>Open the proposed page <ArrowUpRight /></a>}
         </aside>
         <main id="main">
           <Hero />
@@ -121,7 +123,7 @@ function TopBar() {
         <div className="top__rail" aria-label="18 findings: 3 critical, 11 major, 4 minor" role="img">
           {(Object.keys(counts) as Sev[]).flatMap((s) => Array.from({ length: counts[s] }).map((_, i) => <i key={`${s}${i}`} className={`r-${s}`} />))}
         </div>
-        <a className="top__cta" href={PROPOSAL}>Proposed landing page <ArrowUpRight /></a>
+        {SHOW_PROPOSAL_LINKS && <a className="top__cta" href={PROPOSAL}>Proposed landing page <ArrowUpRight /></a>}
       </div>
     </div>
   )
@@ -138,8 +140,8 @@ function Hero() {
         noeltegroup.com is a single Squarespace page carrying three keyword lists, a logo and one LinkedIn icon. It has no heading, no description, no contact method and no second page. The LinkedIn company page, the firm's only live distribution channel, links to a domain that does not resolve. This report sets out 18 findings, shows the evidence, and proposes a landing page with the copy written.
       </p>
       <div className="hero__actions">
-        <a className="btn btn--primary" href={PROPOSAL}>Open the proposed landing page <ArrowUpRight /></a>
-        <a className="btn" href="#priority">Jump to the five fixes</a>
+        {SHOW_PROPOSAL_LINKS && <a className="btn btn--primary" href={PROPOSAL}>Open the proposed landing page <ArrowUpRight /></a>}
+        <a className={SHOW_PROPOSAL_LINKS ? 'btn' : 'btn btn--primary'} href="#priority">Jump to the five fixes</a>
       </div>
       <dl className="meta">
         {[
@@ -460,7 +462,7 @@ const ANNOTATIONS = [
 function Rebuild() {
   return (
     <section id="rebuild" className="sec band">
-      <Head n="09" title="The proposed landing page" sub={<>Built, not drawn: a working page in the firm's own navy and green, with photography generated for it. Drag the divider to compare the first screen. <a href={PROPOSAL} className="band__link">Open it full size →</a></>} />
+      <Head n="09" title="The proposed landing page" sub={<>Built, not drawn: a working page in the firm's own navy and green, with photography generated for it. Drag the divider to compare the first screen.{SHOW_PROPOSAL_LINKS && <> <a href={PROPOSAL} className="band__link">Open it full size →</a></>}</>} />
       <div className="stage-frame"><CompareStage /></div>
       <div className="band__split band__split--rev">
         <div className="stage-frame"><AfterPair /></div>
@@ -472,10 +474,12 @@ function Rebuild() {
       </ol>
       <h3 className="band__h3">The whole page, top to bottom</h3>
       <div className="stage-frame"><FullScroll /></div>
-      <div className="band__cta">
-        <a className="btn btn--green" href={PROPOSAL}>Open the proposed landing page <ArrowUpRight /></a>
-        <span>Desktop and phone. The booking form validates and walks through time selection; nothing is sent.</span>
-      </div>
+      {SHOW_PROPOSAL_LINKS && (
+        <div className="band__cta">
+          <a className="btn btn--green" href={PROPOSAL}>Open the proposed landing page <ArrowUpRight /></a>
+          <span>Desktop and phone. The booking form validates and walks through time selection; nothing is sent.</span>
+        </div>
+      )}
     </section>
   )
 }
